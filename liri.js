@@ -1,3 +1,4 @@
+//Require pakages
 require("dotenv").config()
 let request = require('request')
 let Spotify = require('node-spotify-api')
@@ -5,6 +6,7 @@ let moment = require('moment')
 let key = require('./key')
 let fs = require('fs')
 
+//Switch case for each command
 switch (process.argv[2]) {
     case 'concert-this':
         let artist = process.argv.slice(3).join('')
@@ -15,7 +17,7 @@ switch (process.argv[2]) {
         spotifySong(song)
         break;
     case 'movie-this':
-        let movie = process.argv.slice(3).join('')
+        let movie = process.argv.slice(3).join('+')
         omdb(movie)
         break;
     case 'do-what-it-says':
@@ -23,7 +25,6 @@ switch (process.argv[2]) {
             if (e) {
                 console.log(e)
             } else {
-                console.log(data)
                 let cmdArr = data.split(',')
                 switch (cmdArr[0]) {
                    case 'spotify-this-song':
@@ -41,6 +42,7 @@ switch (process.argv[2]) {
         break;
 }
 
+//Search for song info from Spotify
 function spotifySong(song) {
     if (song == "") {
         song = 'The Sign'
@@ -63,6 +65,7 @@ function spotifySong(song) {
     })
 }
 
+//Search for concert info
 function concert(artist) {
     if (artist == "") {
         artist = "Maroon 5"
@@ -82,6 +85,7 @@ Date: ${moment(element.datetime).format('MM/DD/YYYY')}
         })
 }
 
+//Search for movie info
 function omdb(movie) {
     if (movie == "") {
         movie = "Mr. Nobody"
@@ -89,7 +93,6 @@ function omdb(movie) {
     request("http://www.omdbapi.com/?apikey=8fbf74c9&t=" + movie, function(error, response, body) {
             if (!error && response.statusCode === 200) {
                 let result = JSON.parse(body)
-            console.log(result)
             console.log('Title: ' + result.Title)
             console.log('Year: ' + result.Year)
             console.log('IMDB Rating: ' + result.imdbRating)
