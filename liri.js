@@ -39,45 +39,53 @@ switch (process.argv[2]) {
             }
         })
         break;
-
 }
 
 function spotifySong(song) {
+    if (song == "") {
+        song = 'The Sign'
+    }
     let spotify = new Spotify({
         id: key.spotify.id,
         secret: key.spotify.secret
     })
     spotify.search({ type: 'track', query: song }, function(err, data) {
-    if (err) {
-        return console.log('Error occurred: ' + err);
-    } 
-    for (let i = 0; i < 10; i++) {
-        console.log('Artist: ' + data.tracks.items[i].artists[0].name)
-        console.log('Song Name: ' + data.tracks.items[i].name)
-        console.log('External Link: ' + data.tracks.items[i].external_urls.spotify)
-        console.log('Album Name: ' + data.tracks.items[i].album.name)
-        console.log("============================")
-    }
+        if (err) {
+            return console.log('Error occurred: ' + err);
+        } 
+        for (let i = 0; i < 10; i++) {
+            console.log('Artist: ' + data.tracks.items[i].artists[0].name)
+            console.log('Song Name: ' + data.tracks.items[i].name)
+            console.log('External Link: ' + data.tracks.items[i].external_urls.spotify)
+            console.log('Album Name: ' + data.tracks.items[i].album.name)
+            console.log("============================")
+        }
     })
 }
 
 function concert(artist) {
+    if (artist == "") {
+        artist = "Maroon 5"
+    }
     request("https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp", function(error, response, body) {
             if (!error && response.statusCode === 200) {
             let concert = JSON.parse(body)
             console.log(concert[0].lineup[0])
             concert.forEach(element => {
                 console.log(`
-${element.venue.name}
-${element.venue.city}
-${moment(element.datetime).format('MM/DD/YYYY')}
-                `)
+Venue: ${element.venue.name}
+City: ${element.venue.city}
+Date: ${moment(element.datetime).format('MM/DD/YYYY')}
+====================`)
             })  
             }
         })
 }
 
 function omdb(movie) {
+    if (movie == "") {
+        movie = "Mr. Nobody"
+    }
     request("http://www.omdbapi.com/?apikey=8fbf74c9&t=" + movie, function(error, response, body) {
             if (!error && response.statusCode === 200) {
                 let result = JSON.parse(body)
@@ -91,5 +99,5 @@ function omdb(movie) {
             console.log('Plot: ' + result.Plot)
             console.log('Actors: ' + result.Actors)
             }
-            })
+    })
 }
